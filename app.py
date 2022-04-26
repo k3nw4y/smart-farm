@@ -9,6 +9,9 @@ import glob
 import re
 import numpy as np
 import tensorflow as tf
+import json
+# urllib.request to make a request to api
+import urllib.request
 
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
@@ -106,6 +109,41 @@ def upload():
         result=preds
         return result
     return None
+
+
+#/weather
+@app.route('/weather/', methods =['POST', 'GET'])
+def weather():
+    
+	if request.method == 'POST':
+		city = request.form['city']
+	else:
+		
+		city = 'kollam'
+
+	# your API key will come here
+	api_key = 'e01727c8302c7f225997e74d8aa937aa'
+
+	# source contain json data from api
+	source = urllib.request.urlopen('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid='+api_key + '&units=metric').read()
+
+	# converting JSON data to a dictionary
+	list_of_data = json.loads(source)
+
+	# data for variable list_of_data
+	data = {
+		"country_code": str(list_of_data['sys']['country']),
+        "city": str(list_of_data['name']),
+        "data": str(list_of_data['dt']),
+        # "weather": str(list_of_data['weather']['main']),
+		"coordinate": str(list_of_data['coord']['lon']) + ' '
+					+ str(list_of_data['coord']['lat']),
+		"temp": str(list_of_data['main']['temp']) + '°C',
+		"pressure": str(list_of_data['main']['pressure']) + 'hPa',
+		"humidity": str(list_of_data['main']['humidity']) + '%',
+	}
+	print(data)
+	return render_template('weather.html', data = data)
 
 
 if __name__ == '__main__':
