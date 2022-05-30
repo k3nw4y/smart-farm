@@ -121,7 +121,7 @@ def weather():
 		
 		city = 'kollam'
 
-	# your API key will come here
+	# API Key
 	api_key = 'e01727c8302c7f225997e74d8aa937aa'
 
 	# source contain json data from api
@@ -135,12 +135,16 @@ def weather():
 		"country_code": str(list_of_data['sys']['country']),
         "city": str(list_of_data['name']),
         "data": str(list_of_data['dt']),
-        # "weather": str(list_of_data['weather']['main']),
+
+        #"weather": str(list_of_data['weather']['description']),
 		"coordinate": str(list_of_data['coord']['lon']) + ' '
 					+ str(list_of_data['coord']['lat']),
 		"temp": str(list_of_data['main']['temp']) + '°C',
+        "temp_min": str(list_of_data['main']['temp_min']) + '°C',
+        "temp_max": str(list_of_data['main']['temp_max']) + '°C',
 		"pressure": str(list_of_data['main']['pressure']) + 'hPa',
 		"humidity": str(list_of_data['main']['humidity']) + '%',
+        "wind": str(list_of_data['wind']['speed']) + 'km/h',
 	}
 	print(data)
 	return render_template('weather.html', data = data)
